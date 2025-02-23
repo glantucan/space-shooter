@@ -12,25 +12,35 @@ import {
 
 const enemyInBounds = (enemy) => enemy.y < CANVAS_HEIGHT + 100;
 const bulletInBounds = (bullet) => bullet.y < CANVAS_HEIGHT + 50;
+const maxOffset = PLAYER_WIDTH * 4; // The maximum distance the enemy will move left/right
 
 // Factories for the object pools
-const createEnemy = () => ({
-  x: Math.random() * (CANVAS_WIDTH - PLAYER_WIDTH),
-  y: 50 + Math.random() * 200,
-  lastShot: 0,
-  shotDelay: MIN_SHOT_DELAY + Math.random() * (MAX_SHOT_DELAY - MIN_SHOT_DELAY),
-  initialX: 0, // Store initial spawn position
-});
+const enemyFactory = () => {
+  // Calculate safe spawn zone considering maximum lateral movement
+  const safeZoneStart = maxOffset; // Left margin
+  const safeZoneEnd = CANVAS_WIDTH - PLAYER_WIDTH - maxOffset; // Right margin
 
-const createEnemyBullet = () => ({
+  const x = safeZoneStart + Math.random() * (safeZoneEnd - safeZoneStart);
+
+  return {
+    x,
+    y: 50 + Math.random() * 200,
+    lastShot: 0,
+    shotDelay:
+      MIN_SHOT_DELAY + Math.random() * (MAX_SHOT_DELAY - MIN_SHOT_DELAY),
+    initialX: x, // Store initial spawn position
+  };
+};
+
+const enemyBulletFactory = () => ({
   x: 0,
   y: 0,
   speed: BULLET_SPEED,
 });
 
 // Create pools for enemies and enmy bullets
-const enemyPool = createObjectPool(createEnemy, enemyInBounds);
-const enemyBulletPool = createObjectPool(createEnemyBullet, bulletInBounds);
+const enemyPool = createObjectPool(enemyFactory, enemyInBounds);
+const enemyBulletPool = createObjectPool(enemyBulletFactory, bulletInBounds);
 
 export const Enemy = {
   create: () => {
@@ -42,12 +52,10 @@ export const Enemy = {
   update: (enemy, now) => {
     enemyPool.checkBounds(enemy);
     const shouldShoot = now - enemy.lastShot > enemy.shotDelay;
-    const maxOffset = PLAYER_WIDTH; // Maximum lateral movement
     const newX = enemy.initialX + Math.sin(now / 1000) * maxOffset;
-
     return {
       ...enemy,
-      x: Math.max(0, Math.min(CANVAS_WIDTH - PLAYER_WIDTH, newX)),
+      x: newX,
       y: enemy.y + 0.2,
       lastShot: shouldShoot ? now : enemy.lastShot,
       initialX: enemy.initialX, // Preserve the initial position

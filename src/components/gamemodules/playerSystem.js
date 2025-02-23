@@ -13,13 +13,13 @@ import {
 
 const bulletInBounds = (bullet) => bullet.y + PLAYER_BULLET_SIZE > 0;
 
-const createPlayerBullet = () => ({
+const playerBulletFactory = () => ({
   x: 0,
   y: 0,
   speed: PLAYER_BULLET_SPEED,
 });
 
-const playerBulletPool = createObjectPool(createPlayerBullet, bulletInBounds);
+const playerBulletPool = createObjectPool(playerBulletFactory, bulletInBounds);
 
 export const Player = {
   create: () => ({
