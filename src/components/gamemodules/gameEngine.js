@@ -1,31 +1,12 @@
 import { CANVAS_WIDTH, CANVAS_HEIGHT, ENEMY_COUNT } from './gameConstants';
-
-import {
-  createPlayer,
-  updatePlayerVelocity,
-  updatePlayerPosition,
-  renderPlayer,
-} from './playerSystem';
-
-import {
-  createEnemy,
-  updateEnemy,
-  createBullet,
-  updateBullets,
-  renderEnemy,
-  renderBullet,
-} from './enemySystem';
-
-import {
-  createStarfield,
-  updateStarfield,
-  renderStarfield,
-} from './starSystem';
+import { Player } from './playerSystem';
+import { Enemy } from './enemySystem';
+import { Starfield } from './starSystem';
 
 const createInitialState = () => ({
-  player: createPlayer(),
-  starfield: createStarfield(),
-  enemies: Array.from({ length: ENEMY_COUNT }, createEnemy),
+  player: Player.create(),
+  starfield: Starfield.create(),
+  enemies: Array.from({ length: ENEMY_COUNT }, Enemy.create),
   enemyBullets: [],
   keysPressed: { left: false, right: false },
   lastTime: 0,
@@ -33,20 +14,20 @@ const createInitialState = () => ({
 
 const updateGameState = (state) => {
   const now = Date.now();
-  const newVelocity = updatePlayerVelocity(
+  const newVelocity = Player.updateVelocity(
     state.player.velocity,
     state.keysPressed
   );
-  const newPlayerX = updatePlayerPosition(state.player.x, newVelocity);
+  const newPlayerX = Player.updatePosition(state.player.x, newVelocity);
 
-  const newStarfield = updateStarfield(state.starfield);
-  const newEnemies = state.enemies.map((enemy) => updateEnemy(enemy, now));
+  const newStarfield = Starfield.update(state.starfield);
+  const newEnemies = state.enemies.map((enemy) => Enemy.update(enemy, now));
 
   const newBullets = [
     ...state.enemyBullets,
     ...state.enemies
       .filter((enemy) => now - enemy.lastShot > enemy.shotDelay)
-      .map(createBullet),
+      .map(Enemy.createBullet),
   ];
 
   return {
@@ -58,7 +39,7 @@ const updateGameState = (state) => {
     },
     starfield: newStarfield,
     enemies: newEnemies,
-    enemyBullets: updateBullets(newBullets),
+    enemyBullets: Enemy.updateBullets(newBullets),
     lastTime: now,
   };
 };
@@ -70,10 +51,10 @@ const renderBackground = (ctx) => {
 
 const renderGameState = (ctx, state) => {
   renderBackground(ctx);
-  renderStarfield(ctx, state.starfield);
-  renderPlayer(ctx, state.player);
-  state.enemies.forEach((enemy) => renderEnemy(ctx, enemy));
-  state.enemyBullets.forEach((bullet) => renderBullet(ctx, bullet));
+  Starfield.render(ctx, state.starfield);
+  Player.render(ctx, state.player);
+  state.enemies.forEach((enemy) => Enemy.render(ctx, enemy));
+  state.enemyBullets.forEach((bullet) => Enemy.renderBullet(ctx, bullet));
 };
 
 const handleKeyDown = (state, key) => ({
