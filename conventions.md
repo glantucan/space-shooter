@@ -17,5 +17,5 @@ When writing JavaScript code, you MUST follow these principles:
   2. Immutability (if the language supports it, if not avoid mutation as much as possible)
   3. Function Composition
   4. Declarative Code
-- Do not use object oriented programming unless it enhances readability, maintainability, or performance.
+- Do not use object oriented programming unless it enhances readability, maintainability, or performance. Avoid classes at all cost.
 - Do not ever use typescript.

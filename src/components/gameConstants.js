@@ -1,0 +1,13 @@
+export const CANVAS_WIDTH = 600;
+export const CANVAS_HEIGHT = 800;
+export const PLAYER_WIDTH = 30;
+export const PLAYER_HEIGHT = 30;
+export const ACCELERATION = 0.5;
+export const DECELERATION = 0.92;
+export const MAX_VELOCITY = 8;
+export const STAR_COUNT = 50;
+export const ENEMY_COUNT = 5;
+export const MIN_SHOT_DELAY = 1000;
+export const MAX_SHOT_DELAY = 3000;
+export const BULLET_SPEED = 5;
+export const BULLET_SIZE = 3;

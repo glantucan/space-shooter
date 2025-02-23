@@ -1,5 +1,5 @@
-import './App.css';
-import SpaceShooter from './components/SpaceShooter'; // Import the new component
+import './App.css'
+import SpaceShooter from './components/SpaceShooter'
 
 function App() {
   return (
