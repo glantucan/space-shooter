@@ -1,8 +1,4 @@
-import {
-  CANVAS_WIDTH,
-  CANVAS_HEIGHT,
-  ENEMY_COUNT,
-} from './gameConstants';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, ENEMY_COUNT } from './gameConstants';
 
 import {
   createPlayer,
@@ -50,7 +46,7 @@ const updateGameState = (state) => {
     ...state.enemyBullets,
     ...state.enemies
       .filter((enemy) => now - enemy.lastShot > enemy.shotDelay)
-      .map(createBullet)
+      .map(createBullet),
   ];
 
   return {

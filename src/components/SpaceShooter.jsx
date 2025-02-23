@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 import './SpaceShooter.css';
-import { initGame } from './gameEngine';
+import { initGame } from './gamemodules/gameEngine';
 
 export default function SpaceShooter() {
   const canvasRef = useRef(null);
