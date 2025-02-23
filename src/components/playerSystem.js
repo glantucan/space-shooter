@@ -26,6 +26,6 @@ export const updatePlayerPosition = (x, velocity) =>
   Math.max(0, Math.min(CANVAS_WIDTH - PLAYER_WIDTH, x + velocity));
 
 export const renderPlayer = (ctx, player) => {
-  ctx.fillStyle = 'blue';
+  ctx.fillStyle = 'green';
   ctx.fillRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
 };

@@ -1,7 +1,6 @@
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
-  STAR_COUNT,
   ENEMY_COUNT,
 } from './gameConstants';
 
@@ -21,22 +20,15 @@ import {
   renderBullet,
 } from './enemySystem';
 
-const createStar = () => ({
-  x: Math.random() * CANVAS_WIDTH,
-  y: Math.random() * CANVAS_HEIGHT,
-  size: Math.random() * 2 + 1,
-  speed: Math.random() * 2 + 1,
-});
-
-const updateStar = (star) => ({
-  ...star,
-  y: star.y > CANVAS_HEIGHT ? 0 : star.y + star.speed,
-  x: star.y > CANVAS_HEIGHT ? Math.random() * CANVAS_WIDTH : star.x,
-});
+import {
+  createStarfield,
+  updateStarfield,
+  renderStarfield,
+} from './starSystem';
 
 const createInitialState = () => ({
   player: createPlayer(),
-  stars: Array.from({ length: STAR_COUNT }, createStar),
+  starfield: createStarfield(),
   enemies: Array.from({ length: ENEMY_COUNT }, createEnemy),
   enemyBullets: [],
   keysPressed: { left: false, right: false },
@@ -51,7 +43,7 @@ const updateGameState = (state) => {
   );
   const newPlayerX = updatePlayerPosition(state.player.x, newVelocity);
 
-  const newStars = state.stars.map(updateStar);
+  const newStarfield = updateStarfield(state.starfield);
   const newEnemies = state.enemies.map((enemy) => updateEnemy(enemy, now));
 
   const newBullets = [
@@ -68,7 +60,7 @@ const updateGameState = (state) => {
       x: newPlayerX,
       velocity: newVelocity,
     },
-    stars: newStars,
+    starfield: newStarfield,
     enemies: newEnemies,
     enemyBullets: updateBullets(newBullets),
     lastTime: now,
@@ -80,20 +72,10 @@ const renderBackground = (ctx) => {
   ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 };
 
-const renderStar = (ctx, star) => {
-  ctx.beginPath();
-  ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
-  ctx.fill();
-};
-
 const renderGameState = (ctx, state) => {
   renderBackground(ctx);
-
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.5)';
-  state.stars.forEach((star) => renderStar(ctx, star));
-
+  renderStarfield(ctx, state.starfield);
   renderPlayer(ctx, state.player);
-
   state.enemies.forEach((enemy) => renderEnemy(ctx, enemy));
   state.enemyBullets.forEach((bullet) => renderBullet(ctx, bullet));
 };
