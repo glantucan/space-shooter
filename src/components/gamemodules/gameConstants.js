@@ -11,3 +11,6 @@ export const MIN_SHOT_DELAY = 1000;
 export const MAX_SHOT_DELAY = 3000;
 export const BULLET_SPEED = 5;
 export const BULLET_SIZE = 3;
+export const PLAYER_BULLET_SPEED = -5;
+export const PLAYER_BULLET_SIZE = 3;
+export const PLAYER_SHOT_DELAY = 250;

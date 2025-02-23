@@ -6,6 +6,8 @@ import {
   ACCELERATION,
   DECELERATION,
   MAX_VELOCITY,
+  PLAYER_BULLET_SPEED,
+  PLAYER_BULLET_SIZE,
 } from './gameConstants';
 
 export const Player = {
@@ -29,5 +31,26 @@ export const Player = {
   render: (ctx, player) => {
     ctx.fillStyle = 'green';
     ctx.fillRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
-  }
+  },
+
+  createBullet: (player) => ({
+    x: player.x + PLAYER_WIDTH / 2,
+    y: player.y,
+    speed: PLAYER_BULLET_SPEED,
+  }),
+
+  updateBullets: (bullets) =>
+    bullets
+      .filter((bullet) => bullet.y + PLAYER_BULLET_SIZE > 0)
+      .map((bullet) => ({
+        ...bullet,
+        y: bullet.y + bullet.speed,
+      })),
+
+  renderBullet: (ctx, bullet) => {
+    ctx.fillStyle = 'cyan';
+    ctx.beginPath();
+    ctx.arc(bullet.x, bullet.y, PLAYER_BULLET_SIZE, 0, Math.PI * 2);
+    ctx.fill();
+  },
 };

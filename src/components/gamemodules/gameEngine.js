@@ -1,4 +1,4 @@
-import { CANVAS_WIDTH, CANVAS_HEIGHT, ENEMY_COUNT } from './gameConstants';
+import { CANVAS_WIDTH, CANVAS_HEIGHT, ENEMY_COUNT, PLAYER_SHOT_DELAY } from './gameConstants';
 import { Player } from './playerSystem';
 import { Enemy } from './enemySystem';
 import { Starfield } from './starSystem';
@@ -8,8 +8,10 @@ const createInitialState = () => ({
   starfield: Starfield.create(),
   enemies: Array.from({ length: ENEMY_COUNT }, Enemy.create),
   enemyBullets: [],
-  keysPressed: { left: false, right: false },
+  playerBullets: [],
+  keysPressed: { left: false, right: false, space: false },
   lastTime: 0,
+  lastPlayerShot: 0,
 });
 
 const updateGameState = (state) => {
@@ -20,10 +22,17 @@ const updateGameState = (state) => {
   );
   const newPlayerX = Player.updatePosition(state.player.x, newVelocity);
 
+  const newPlayerBullets = [
+    ...state.playerBullets,
+    ...(state.keysPressed.space && now - state.lastPlayerShot > PLAYER_SHOT_DELAY
+      ? [Player.createBullet(state.player)]
+      : []),
+  ];
+
   const newStarfield = Starfield.update(state.starfield);
   const newEnemies = state.enemies.map((enemy) => Enemy.update(enemy, now));
 
-  const newBullets = [
+  const newEnemyBullets = [
     ...state.enemyBullets,
     ...state.enemies
       .filter((enemy) => now - enemy.lastShot > enemy.shotDelay)
@@ -39,8 +48,12 @@ const updateGameState = (state) => {
     },
     starfield: newStarfield,
     enemies: newEnemies,
-    enemyBullets: Enemy.updateBullets(newBullets),
+    playerBullets: Player.updateBullets(newPlayerBullets),
+    enemyBullets: Enemy.updateBullets(newEnemyBullets),
     lastTime: now,
+    lastPlayerShot: state.keysPressed.space && now - state.lastPlayerShot > PLAYER_SHOT_DELAY 
+      ? now 
+      : state.lastPlayerShot,
   };
 };
 
@@ -55,6 +68,7 @@ const renderGameState = (ctx, state) => {
   Player.render(ctx, state.player);
   state.enemies.forEach((enemy) => Enemy.render(ctx, enemy));
   state.enemyBullets.forEach((bullet) => Enemy.renderBullet(ctx, bullet));
+  state.playerBullets.forEach((bullet) => Player.renderBullet(ctx, bullet));
 };
 
 const handleKeyDown = (state, key) => ({
@@ -63,6 +77,7 @@ const handleKeyDown = (state, key) => ({
     ...state.keysPressed,
     left: key === 'ArrowLeft' ? true : state.keysPressed.left,
     right: key === 'ArrowRight' ? true : state.keysPressed.right,
+    space: key === ' ' ? true : state.keysPressed.space,
   },
 });
 
@@ -72,6 +87,7 @@ const handleKeyUp = (state, key) => ({
     ...state.keysPressed,
     left: key === 'ArrowLeft' ? false : state.keysPressed.left,
     right: key === 'ArrowRight' ? false : state.keysPressed.right,
+    space: key === ' ' ? false : state.keysPressed.space,
   },
 });
 
