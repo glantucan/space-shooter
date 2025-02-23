@@ -4,7 +4,8 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "generate-assets": "node scripts/assetGeneration/generateStarBackgrounds.js"
+    "generate-assets": "node scripts/assetGeneration/generateStarBackgrounds.js",
+    "generate-enemies": "node scripts/assetGeneration/generateEnemyShips.js"
   },
   "dependencies": {
     "react": "^18.2.0",
