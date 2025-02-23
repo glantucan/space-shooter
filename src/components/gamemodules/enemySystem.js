@@ -19,6 +19,7 @@ const createEnemy = () => ({
   y: 50 + Math.random() * 200,
   lastShot: 0,
   shotDelay: MIN_SHOT_DELAY + Math.random() * (MAX_SHOT_DELAY - MIN_SHOT_DELAY),
+  initialX: 0, // Store initial spawn position
 });
 
 const createEnemyBullet = () => ({
@@ -32,16 +33,24 @@ const enemyPool = createObjectPool(createEnemy, enemyInBounds);
 const enemyBulletPool = createObjectPool(createEnemyBullet, bulletInBounds);
 
 export const Enemy = {
-  create: () => enemyPool.acquire(),
+  create: () => {
+    const enemy = enemyPool.acquire();
+    enemy.initialX = enemy.x; // Store the initial spawn position
+    return enemy;
+  },
 
   update: (enemy, now) => {
     enemyPool.checkBounds(enemy);
     const shouldShoot = now - enemy.lastShot > enemy.shotDelay;
+    const maxOffset = PLAYER_WIDTH; // Maximum lateral movement
+    const newX = enemy.initialX + Math.sin(now / 1000) * maxOffset;
+
     return {
       ...enemy,
-      x: enemy.x + Math.sin(now / 1000),
+      x: Math.max(0, Math.min(CANVAS_WIDTH - PLAYER_WIDTH, newX)),
       y: enemy.y + 0.2,
       lastShot: shouldShoot ? now : enemy.lastShot,
+      initialX: enemy.initialX, // Preserve the initial position
     };
   },
 
