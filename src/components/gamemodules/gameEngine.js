@@ -35,20 +35,26 @@ const updateGameState = (state) => {
       : []),
   ];
 
+  // First check which enemies should shoot
+  const shootingEnemies = state.enemies.filter(
+    (enemy) => now - enemy.lastShot > enemy.shotDelay
+  );
+
+  // Create new bullets for shooting enemies
+  const newEnemyBullets = [
+    ...state.enemyBullets,
+    ...shootingEnemies.map(Enemy.createBullet),
+  ];
+
+  // Then update enemy positions
   const newEnemies = state.enemies
     .map((enemy) => Enemy.update(enemy, now))
     .filter((enemy) => enemy.y < CANVAS_HEIGHT + 200);
 
+  // Spawn new enemies if needed
   while (newEnemies.length < ENEMY_COUNT) {
     newEnemies.push(Enemy.create());
   }
-
-  const newEnemyBullets = [
-    ...state.enemyBullets,
-    ...newEnemies
-      .filter((enemy) => now - enemy.lastShot > enemy.shotDelay)
-      .map(Enemy.createBullet),
-  ];
 
   const updatedPlayerBullets = Player.updateBullets(newPlayerBullets);
   const updatedEnemyBullets = Enemy.updateBullets(newEnemyBullets);
