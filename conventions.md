@@ -1,5 +1,8 @@
 When writing JavaScript code, you MUST follow these principles:
 - Code should be easy to read and understand.
+- End every statement with a semicolon.
+- Use single quotes for strings.
+- Use `const` for variables that do not change and `let` for variables that do.
 - Keep the code as simple as possible. Avoid unnecessary complexity.
 - Use meaningful names for variables, functions, etc. Names should reveal intent.
 - Functions should be small and do one thing well. They should not exceed a few lines.

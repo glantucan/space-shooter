@@ -1,3 +1,4 @@
+import createObjectPool from './objectPool';
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
@@ -9,6 +10,16 @@ import {
   PLAYER_BULLET_SPEED,
   PLAYER_BULLET_SIZE,
 } from './gameConstants';
+
+const bulletInBounds = (bullet) => bullet.y + PLAYER_BULLET_SIZE > 0;
+
+const createPlayerBullet = () => ({
+  x: 0,
+  y: 0,
+  speed: PLAYER_BULLET_SPEED,
+});
+
+const playerBulletPool = createObjectPool(createPlayerBullet, bulletInBounds);
 
 export const Player = {
   create: () => ({
@@ -28,24 +39,27 @@ export const Player = {
   updatePosition: (x, velocity) =>
     Math.max(0, Math.min(CANVAS_WIDTH - PLAYER_WIDTH, x + velocity)),
 
+  createBullet: (player) => {
+    const bullet = playerBulletPool.acquire();
+    bullet.x = player.x + PLAYER_WIDTH / 2;
+    bullet.y = player.y;
+    return bullet;
+  },
+
+  updateBullets: (bullets) => {
+    bullets.forEach((bullet) => playerBulletPool.checkBounds(bullet));
+    return bullets.map((bullet) => ({
+      ...bullet,
+      y: bullet.y + bullet.speed,
+    }));
+  },
+
+  releaseBullet: (bullet) => playerBulletPool.release(bullet),
+
   render: (ctx, player) => {
     ctx.fillStyle = 'green';
     ctx.fillRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
   },
-
-  createBullet: (player) => ({
-    x: player.x + PLAYER_WIDTH / 2,
-    y: player.y,
-    speed: PLAYER_BULLET_SPEED,
-  }),
-
-  updateBullets: (bullets) =>
-    bullets
-      .filter((bullet) => bullet.y + PLAYER_BULLET_SIZE > 0)
-      .map((bullet) => ({
-        ...bullet,
-        y: bullet.y + bullet.speed,
-      })),
 
   renderBullet: (ctx, bullet) => {
     ctx.fillStyle = 'cyan';

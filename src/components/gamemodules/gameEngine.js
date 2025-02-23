@@ -1,4 +1,9 @@
-import { CANVAS_WIDTH, CANVAS_HEIGHT, ENEMY_COUNT, PLAYER_SHOT_DELAY } from './gameConstants';
+import {
+  CANVAS_WIDTH,
+  CANVAS_HEIGHT,
+  ENEMY_COUNT,
+  PLAYER_SHOT_DELAY,
+} from './gameConstants';
 import { Player } from './playerSystem';
 import { Enemy } from './enemySystem';
 import { Starfield } from './starSystem';
@@ -24,20 +29,29 @@ const updateGameState = (state) => {
 
   const newPlayerBullets = [
     ...state.playerBullets,
-    ...(state.keysPressed.space && now - state.lastPlayerShot > PLAYER_SHOT_DELAY
+    ...(state.keysPressed.space &&
+    now - state.lastPlayerShot > PLAYER_SHOT_DELAY
       ? [Player.createBullet(state.player)]
       : []),
   ];
 
-  const newStarfield = Starfield.update(state.starfield);
-  const newEnemies = state.enemies.map((enemy) => Enemy.update(enemy, now));
+  const newEnemies = state.enemies
+    .map((enemy) => Enemy.update(enemy, now))
+    .filter((enemy) => enemy.y < CANVAS_HEIGHT + 200);
+
+  while (newEnemies.length < ENEMY_COUNT) {
+    newEnemies.push(Enemy.create());
+  }
 
   const newEnemyBullets = [
     ...state.enemyBullets,
-    ...state.enemies
+    ...newEnemies
       .filter((enemy) => now - enemy.lastShot > enemy.shotDelay)
       .map(Enemy.createBullet),
   ];
+
+  const updatedPlayerBullets = Player.updateBullets(newPlayerBullets);
+  const updatedEnemyBullets = Enemy.updateBullets(newEnemyBullets);
 
   return {
     ...state,
@@ -46,14 +60,15 @@ const updateGameState = (state) => {
       x: newPlayerX,
       velocity: newVelocity,
     },
-    starfield: newStarfield,
+    starfield: Starfield.update(state.starfield),
     enemies: newEnemies,
-    playerBullets: Player.updateBullets(newPlayerBullets),
-    enemyBullets: Enemy.updateBullets(newEnemyBullets),
+    playerBullets: updatedPlayerBullets,
+    enemyBullets: updatedEnemyBullets,
     lastTime: now,
-    lastPlayerShot: state.keysPressed.space && now - state.lastPlayerShot > PLAYER_SHOT_DELAY 
-      ? now 
-      : state.lastPlayerShot,
+    lastPlayerShot:
+      state.keysPressed.space && now - state.lastPlayerShot > PLAYER_SHOT_DELAY
+        ? now
+        : state.lastPlayerShot,
   };
 };
 
