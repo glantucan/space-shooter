@@ -1,31 +1,29 @@
-import { CANVAS_WIDTH, CANVAS_HEIGHT, STAR_COUNT } from './gameConstants';
-
-const createStarLayerImage = (opacity) => {
-  const canvas = document.createElement('canvas');
-  canvas.width = CANVAS_WIDTH;
-  canvas.height = CANVAS_HEIGHT;
-  const ctx = canvas.getContext('2d');
-
-  ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
-  Array.from({ length: STAR_COUNT }).forEach(() => {
-    const x = Math.random() * CANVAS_WIDTH;
-    const y = Math.random() * CANVAS_HEIGHT;
-    const size = Math.random() * 2 + 1;
-    
-    ctx.beginPath();
-    ctx.arc(x, y, size, 0, Math.PI * 2);
-    ctx.fill();
-  });
-
-  return canvas;
-};
+import { CANVAS_HEIGHT } from './gameConstants';
 
 export const createStarfield = () => {
   const layers = [
-    { image: createStarLayerImage(0.3), y: 0, speed: 0.5 }, // distant stars
-    { image: createStarLayerImage(0.5), y: 0, speed: 1.0 }, // middle layer
-    { image: createStarLayerImage(0.7), y: 0, speed: 1.5 }, // close stars
+    { 
+      image: new Image(),
+      y: 0,
+      speed: 0.5
+    },
+    { 
+      image: new Image(),
+      y: 0,
+      speed: 1.0
+    },
+    { 
+      image: new Image(),
+      y: 0,
+      speed: 1.5
+    }
   ];
+
+  // Load the pre-generated images
+  layers[0].image.src = '/assets/stars-far.png';
+  layers[1].image.src = '/assets/stars-mid.png';
+  layers[2].image.src = '/assets/stars-near.png';
+
   return { layers };
 };
 
@@ -38,8 +36,9 @@ export const updateStarfield = (starfield) => ({
 
 export const renderStarfield = (ctx, starfield) => {
   starfield.layers.forEach(layer => {
-    // Draw the layer twice to create seamless scrolling
-    ctx.drawImage(layer.image, 0, layer.y);
-    ctx.drawImage(layer.image, 0, layer.y - CANVAS_HEIGHT);
+    if (layer.image.complete) {
+      ctx.drawImage(layer.image, 0, layer.y);
+      ctx.drawImage(layer.image, 0, layer.y - CANVAS_HEIGHT);
+    }
   });
 };
