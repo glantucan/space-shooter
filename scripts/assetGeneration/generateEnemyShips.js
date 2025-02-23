@@ -51,38 +51,90 @@ const drawEnemy01 = (ctx) => {
   ctx.moveTo(50, 5); // Top point
   ctx.lineTo(65, 35); // Right shoulder
   ctx.lineTo(85, 45); // Right wing tip
+  ctx.lineTo(98, 55); // Right wing back extension
+  ctx.lineTo(95, 65); // Right wing far back
+  ctx.lineTo(85, 60); // Right wing inner back
   ctx.lineTo(70, 55); // Right mid
   ctx.lineTo(60, 75); // Bottom right
   ctx.lineTo(50, 65); // Bottom center
   ctx.lineTo(40, 75); // Bottom left
   ctx.lineTo(30, 55); // Left mid
+  ctx.lineTo(15, 60); // Left wing inner back
+  ctx.lineTo(5, 65); // Left wing far back
+  ctx.lineTo(2, 55); // Left wing back extension
   ctx.lineTo(15, 45); // Left wing tip
   ctx.lineTo(35, 35); // Left shoulder
   ctx.closePath();
   ctx.fill();
 
-  // Wing details - darker red
-  const wingGradient = ctx.createLinearGradient(15, 45, 85, 45);
-  wingGradient.addColorStop(0, '#600');
-  wingGradient.addColorStop(0.5, '#800');
-  wingGradient.addColorStop(1, '#600');
+  // Wing panels - slightly darker sections
+  const panelGradient = ctx.createLinearGradient(15, 45, 85, 45);
+  panelGradient.addColorStop(0, '#500');
+  panelGradient.addColorStop(0.5, '#700');
+  panelGradient.addColorStop(1, '#500');
 
-  // Left wing accent
-  ctx.fillStyle = wingGradient;
+  // Left wing panels
+  ctx.fillStyle = panelGradient;
+  // Front panel
   ctx.beginPath();
   ctx.moveTo(15, 45);
   ctx.lineTo(35, 40);
   ctx.lineTo(35, 50);
   ctx.closePath();
   ctx.fill();
+  // Rear panel
+  ctx.beginPath();
+  ctx.moveTo(2, 55);
+  ctx.lineTo(15, 50);
+  ctx.lineTo(5, 65);
+  ctx.closePath();
+  ctx.fill();
 
-  // Right wing accent
+  // Right wing panels
+  // Front panel
   ctx.beginPath();
   ctx.moveTo(85, 45);
   ctx.lineTo(65, 40);
   ctx.lineTo(65, 50);
   ctx.closePath();
   ctx.fill();
+  // Rear panel
+  ctx.beginPath();
+  ctx.moveTo(98, 55);
+  ctx.lineTo(85, 50);
+  ctx.lineTo(95, 65);
+  ctx.closePath();
+  ctx.fill();
+
+  // Panel borders
+  ctx.strokeStyle = '#400';
+  ctx.lineWidth = 1;
+  
+  // Left wing panel lines
+  ctx.beginPath();
+  ctx.moveTo(2, 55);
+  ctx.lineTo(15, 45);
+  ctx.lineTo(35, 35);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(5, 65);
+  ctx.lineTo(15, 60);
+  ctx.lineTo(30, 55);
+  ctx.stroke();
+
+  // Right wing panel lines
+  ctx.beginPath();
+  ctx.moveTo(98, 55);
+  ctx.lineTo(85, 45);
+  ctx.lineTo(65, 35);
+  ctx.stroke();
+  
+  ctx.beginPath();
+  ctx.moveTo(95, 65);
+  ctx.lineTo(85, 60);
+  ctx.lineTo(70, 55);
+  ctx.stroke();
 
   // Metallic highlights
   ctx.strokeStyle = '#faa';
