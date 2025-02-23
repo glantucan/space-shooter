@@ -29,6 +29,7 @@ const enemyFactory = () => {
     shotDelay:
       MIN_SHOT_DELAY + Math.random() * (MAX_SHOT_DELAY - MIN_SHOT_DELAY),
     initialX: x, // Store initial spawn position
+    speed: 0.1 + Math.random() * 0.3, // Random speed between 0.1 and 0.4
   };
 };
 
@@ -56,7 +57,7 @@ export const Enemy = {
     return {
       ...enemy,
       x: newX,
-      y: enemy.y + 0.2,
+      y: enemy.y + enemy.speed,
       lastShot: shouldShoot ? now : enemy.lastShot,
       initialX: enemy.initialX, // Preserve the initial position
     };
