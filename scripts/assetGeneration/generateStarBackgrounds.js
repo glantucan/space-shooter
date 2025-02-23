@@ -15,9 +15,8 @@ const generateStarLayer = (opacity) => {
   const canvas = createCanvas(CANVAS_WIDTH, CANVAS_HEIGHT);
   const ctx = canvas.getContext('2d');
 
-  // Set black background
-  ctx.fillStyle = '#000014';
-  ctx.fillRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+  // Make the background transparent
+  ctx.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
 
   ctx.fillStyle = `rgba(255, 255, 255, ${opacity})`;
   Array.from({ length: STAR_COUNT }).forEach(() => {
@@ -30,7 +29,7 @@ const generateStarLayer = (opacity) => {
     ctx.fill();
   });
 
-  return canvas.toBuffer();
+  return canvas.toBuffer('image/png');
 };
 
 // Ensure the assets directory exists

@@ -20,9 +20,9 @@ export const createStarfield = () => {
   ];
 
   // Load the pre-generated images
-  layers[0].image.src = '/assets/stars-far.png';
-  layers[1].image.src = '/assets/stars-mid.png';
-  layers[2].image.src = '/assets/stars-near.png';
+  layers[0].image.src = '/assets/images/backgrounds/stars-far.png';
+  layers[1].image.src = '/assets/images/backgrounds/stars-mid.png';
+  layers[2].image.src = '/assets/images/backgrounds/stars-near.png';
 
   return { layers };
 };
