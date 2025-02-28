@@ -1,4 +1,6 @@
 import createObjectPool from './objectPool';
+import gameAssets from './gameAssets';
+
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
@@ -10,6 +12,9 @@ import {
   PLAYER_BULLET_SPEED,
   PLAYER_BULLET_SIZE,
 } from './gameConstants';
+
+const playerImage = new Image();
+playerImage.src = gameAssets.player;
 
 const bulletInBounds = (bullet) => bullet.y + PLAYER_BULLET_SIZE > 0;
 
@@ -57,8 +62,18 @@ export const Player = {
   releaseBullet: (bullet) => playerBulletPool.release(bullet),
 
   render: (ctx, player) => {
-    ctx.fillStyle = 'green';
-    ctx.fillRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+    if (playerImage.complete) {
+      ctx.drawImage(
+        playerImage,
+        player.x,
+        player.y,
+        PLAYER_WIDTH,
+        PLAYER_HEIGHT
+      );
+    } else {
+      ctx.fillStyle = 'green';
+      ctx.fillRect(player.x, player.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+    }
   },
 
   renderBullet: (ctx, bullet) => {

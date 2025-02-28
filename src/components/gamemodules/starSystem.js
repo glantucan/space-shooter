@@ -1,4 +1,5 @@
 import { CANVAS_HEIGHT } from './gameConstants';
+import gameAssets from './gameAssets';
 
 export const Starfield = {
   create: () => {
@@ -8,9 +9,9 @@ export const Starfield = {
       { image: new Image(), y: 0, speed: 1.5 },
     ];
 
-    layers[0].image.src = '/assets/images/backgrounds/stars-far.png';
-    layers[1].image.src = '/assets/images/backgrounds/stars-mid.png';
-    layers[2].image.src = '/assets/images/backgrounds/stars-near.png';
+    layers[0].image.src = gameAssets.background.far;
+    layers[1].image.src = gameAssets.background.mid;
+    layers[2].image.src = gameAssets.background.near;
 
     return { layers };
   },
