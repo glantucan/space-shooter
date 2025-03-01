@@ -1,5 +1,5 @@
 import createObjectPool from './objectPool';
-import gameAssets from './gameAssets';
+import { getAsset } from './gameAssets';
 
 import {
   CANVAS_WIDTH,
@@ -13,8 +13,7 @@ import {
   PLAYER_BULLET_SIZE,
 } from './gameConstants';
 
-const playerImage = new Image();
-playerImage.src = gameAssets.player;
+const playerImage = getAsset('player');
 
 const bulletInBounds = (bullet) => bullet.y + PLAYER_BULLET_SIZE > 0;
 

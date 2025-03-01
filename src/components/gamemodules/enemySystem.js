@@ -1,4 +1,5 @@
 import createObjectPool from './objectPool';
+import { getAsset } from './gameAssets';
 import {
   CANVAS_WIDTH,
   CANVAS_HEIGHT,
@@ -9,6 +10,8 @@ import {
   MIN_SHOT_DELAY,
   MAX_SHOT_DELAY,
 } from './gameConstants';
+
+const enemyImage = getAsset('enemies.tier1');
 
 const enemyInBounds = (enemy) => enemy.y < CANVAS_HEIGHT + 100;
 const bulletInBounds = (bullet) => bullet.y < CANVAS_HEIGHT + 50;
@@ -82,8 +85,12 @@ export const Enemy = {
   releaseBullet: (bullet) => enemyBulletPool.release(bullet),
 
   render: (ctx, enemy) => {
-    ctx.fillStyle = 'red';
-    ctx.fillRect(enemy.x, enemy.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+    if (enemyImage.complete) {
+      ctx.drawImage(enemyImage, enemy.x, enemy.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+    } else {
+      ctx.fillStyle = 'red';
+      ctx.fillRect(enemy.x, enemy.y, PLAYER_WIDTH, PLAYER_HEIGHT);
+    }
   },
 
   renderBullet: (ctx, bullet) => {
