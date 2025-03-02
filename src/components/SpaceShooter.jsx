@@ -1,6 +1,8 @@
 import { useEffect, useRef } from 'react';
 import './SpaceShooter.css';
-import { initGame } from './gamemodules/gameEngine';
+import { initGame } from './gamemodules/gameLoop';
+
+// FIX: It's not responsive. width and height of the canvas should be based on the size of the view port
 
 export default function SpaceShooter() {
   const canvasRef = useRef(null);

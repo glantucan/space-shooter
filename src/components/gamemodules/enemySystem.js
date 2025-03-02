@@ -17,7 +17,6 @@ const enemyInBounds = (enemy) => enemy.y < CANVAS_HEIGHT + 100;
 const bulletInBounds = (bullet) => bullet.y < CANVAS_HEIGHT + 50;
 const maxOffset = PLAYER_WIDTH * 4; // The maximum distance the enemy will move left/right
 
-// Factories for the object pools
 const enemyFactory = () => {
   // Calculate safe spawn zone considering maximum lateral movement
   const safeZoneStart = maxOffset; // Left margin
@@ -42,7 +41,6 @@ const enemyBulletFactory = () => ({
   speed: BULLET_SPEED,
 });
 
-// Create pools for enemies and enmy bullets
 const enemyPool = createObjectPool(enemyFactory, enemyInBounds);
 const enemyBulletPool = createObjectPool(enemyBulletFactory, bulletInBounds);
 

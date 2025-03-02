@@ -2,7 +2,7 @@ const createObjectPool = (factory, bounds, initialSize = 50) => {
   const active = new Set();
   const inactive = new Set();
   const outOfBounds = new Map();
-
+  // FIX: There is an error after a while
   // Pre-populate pool
   for (let i = 0; i < initialSize; i++) {
     inactive.add(factory());

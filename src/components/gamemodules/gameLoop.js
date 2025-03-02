@@ -8,6 +8,40 @@ import { Player } from './playerSystem';
 import { Enemy } from './enemySystem';
 import { Starfield } from './starSystem';
 
+export const initGame = (canvas) => {
+  if (!canvas) throw new Error('Canvas is required');
+
+  const ctx = canvas.getContext('2d');
+  canvas.width = CANVAS_WIDTH;
+  canvas.height = CANVAS_HEIGHT;
+
+  let gameState = createInitialState();
+
+  const keyDownHandler = (e) => {
+    gameState = handleKeyDown(gameState, e.key);
+  };
+
+  const keyUpHandler = (e) => {
+    gameState = handleKeyUp(gameState, e.key);
+  };
+
+  window.addEventListener('keydown', keyDownHandler);
+  window.addEventListener('keyup', keyUpHandler);
+
+  const animate = () => {
+    gameState = updateGameState(gameState);
+    renderGameState(ctx, gameState);
+    requestAnimationFrame(animate);
+  };
+
+  animate();
+
+  return () => {
+    window.removeEventListener('keydown', keyDownHandler);
+    window.removeEventListener('keyup', keyUpHandler);
+  };
+};
+
 const createInitialState = () => ({
   player: Player.create(),
   starfield: Starfield.create(),
@@ -111,37 +145,3 @@ const handleKeyUp = (state, key) => ({
     space: key === ' ' ? false : state.keysPressed.space,
   },
 });
-
-export const initGame = (canvas) => {
-  if (!canvas) throw new Error('Canvas is required');
-
-  const ctx = canvas.getContext('2d');
-  canvas.width = CANVAS_WIDTH;
-  canvas.height = CANVAS_HEIGHT;
-
-  let gameState = createInitialState();
-
-  const keyDownHandler = (e) => {
-    gameState = handleKeyDown(gameState, e.key);
-  };
-
-  const keyUpHandler = (e) => {
-    gameState = handleKeyUp(gameState, e.key);
-  };
-
-  window.addEventListener('keydown', keyDownHandler);
-  window.addEventListener('keyup', keyUpHandler);
-
-  const animate = () => {
-    gameState = updateGameState(gameState);
-    renderGameState(ctx, gameState);
-    requestAnimationFrame(animate);
-  };
-
-  animate();
-
-  return () => {
-    window.removeEventListener('keydown', keyDownHandler);
-    window.removeEventListener('keyup', keyUpHandler);
-  };
-};
